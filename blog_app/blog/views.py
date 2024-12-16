@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post 
 from blog_app.forms import ContactForm
 from django.contrib import messages
+from users.models import Complaint
 
 # Create your views here.
 
@@ -81,10 +82,17 @@ def contact(request):
     else:
         form = ContactForm(request.POST)
         if form.is_valid():
+            name = form.cleaned_data['name']
             subject = form.cleaned_data['subject']
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
             try:
+                Complaint.objects.create(
+                    name=name,
+                    email=from_email,
+                    subject=subject,
+                    message=message
+                )
                 send_mail(subject,message,from_email,['suchirpandula@gmail.com'])
             except BadHeaderError:
                 return HttpResponse('Invalid Header Found')
