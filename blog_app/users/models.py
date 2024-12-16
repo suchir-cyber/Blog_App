@@ -19,3 +19,14 @@ class Profile(models.Model):
             output_size = (300,300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+
+class Complaint(models.Model):
+    name = models.CharField(max_length=100)  # User's name
+    email = models.EmailField()             # User's email
+    subject = models.CharField(max_length=200)  # Subject of the complaint
+    message = models.TextField()            # The actual complaint message
+    date_submitted = models.DateTimeField(auto_now_add=True)  # Timestamp
+
+    def __str__(self):
+        return f"{self.name} - {self.subject} ({self.date_submitted})"
