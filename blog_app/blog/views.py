@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.models import User
+from django.core.mail import send_mail,BadHeaderError
+from django.http import HttpResponse,HttpResponseRedirect
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post 
+from blog_app.forms import ContactForm
+from django.contrib import messages
 
 # Create your views here.
 
@@ -70,3 +74,20 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 def about(request):
     return render(request,'blog/about.html')
+
+def contact(request):
+    if request.method == 'GET':
+        form = ContactForm()
+    else:
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject,message,from_email,['suchirpandula@gmail.com'])
+            except BadHeaderError:
+                return HttpResponse('Invalid Header Found')
+            messages.success(request, f'Your request has been sent successfully!')
+            return redirect('blog-contact')
+    return render(request,'blog/contact.html',{'form' : form})
