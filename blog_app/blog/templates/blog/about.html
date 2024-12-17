@@ -1,4 +1,22 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1>About page</h1>
+    <div class="about-container">
+        <h1>About Our Blog</h1>
+        <p>Welcome to <strong>BlogWeb</strong>!</p>
+        <p>At <strong>BlogWeb</strong>, we believe that everyone has a story to tell. We provide a platform for you to share your thoughts, experiences, and creativity with the world. Our blog is designed to empower users like you to express yourself freely and connect with a community of like-minded individuals.</p>
+        <h2>What We Offer</h2>
+        <ul>
+            <li><strong>User-Friendly Interface:</strong> Our blog features an intuitive and easy-to-navigate interface, making it simple for you to manage your posts and engage with other users.</li>
+            <li><strong>Create Your Own Posts:</strong> Whether you want to share your travel adventures, cooking recipes, or personal reflections, you can easily create and publish your own posts. Our editor provides a rich text formatting experience, allowing you to add images, links, and more to make your content visually appealing.</li>
+            <li><strong>List All Your Posts:</strong> Keep track of all your contributions in one place. Our dashboard allows you to view a list of all your posts, making it easy to manage your content and see your blogging journey at a glance.</li>
+            <li><strong>Edit Your Posts:</strong> Made a mistake or want to update your content? No problem! You can easily edit any of your posts to ensure that your message is always clear and up-to-date.</li>
+            <li><strong>Delete Unwanted Posts:</strong> If you ever feel that a post no longer represents you or your ideas, you can delete it with just a click. We believe in giving you full control over your content.</li>
+        </ul>
+        <h2>Join Our Community</h2>
+        <p>We are more than just a blogging platform; we are a community. Engage with other bloggers, share your insights, and discover new perspectives. Your voice matters, and we are here to amplify it.</p>
+        <h2>Get Started Today!</h2>
+        <p>Ready to share your story? Sign up now and start creating your own posts. We can’t wait to see what you have to say!</p>
+        <p>If you have any questions or need assistance, feel free to reach out to our support team at our <a href="mailto:suchirpandula@gmail.com">MAIL</a> or visit our <a href="{% url 'blog-contact' %}">Contact Us Page</a>.</p>
+        <p>Thank you for being a part of <strong>BlogWeb</strong>. Happy blogging!</p>
+    </div>
 {% endblock content %}
