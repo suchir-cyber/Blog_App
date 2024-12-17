@@ -8,12 +8,14 @@ from .models import Post
 from blog_app.forms import ContactForm
 from django.contrib import messages
 from users.models import Complaint
+from django.utils import timezone
 
 # Create your views here.
 
 def home(request):
     context = {
-        'posts' : Post.objects.all()
+        'posts' : Post.objects.all(),
+        'title' : 'home',
     }
     return render(request,'blog/home.html',context)
 
@@ -74,7 +76,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 def about(request):
-    return render(request,'blog/about.html')
+    context = {
+
+        'title': 'About',  # Set the title dynamically
+
+        # Add other context variables as needed
+
+    }
+    return render(request,'blog/about.html',context)
 
 def contact(request):
     if request.method == 'GET':
@@ -98,10 +107,21 @@ def contact(request):
                 return HttpResponse('Invalid Header Found')
             messages.success(request, f'Your request has been sent successfully!')
             return redirect('blog-contact')
-    return render(request,'blog/contact.html',{'form' : form})
+    return render(request,'blog/contact.html',{'form' : form,'title' : 'contact'})
+
 
 def searchbar(request):
     if request.method == "GET":
         search = request.GET.get('search')
-        posts = Post.objects.all().filter(content__contains=search)
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        posts = Post.objects.all()
+        if start_date and end_date:
+            # Convert string dates to datetime objects
+            start_date = timezone.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = timezone.datetime.strptime(end_date, '%Y-%m-%d') + timezone.timedelta(days=1)  # Include the end date
+            posts = posts.filter(date_posted__range=(start_date, end_date))
+        else:
+            if search:
+                posts = Post.objects.all().filter(content__contains=search)
         return render(request,'blog/searchbar.html',{"posts" : posts})
