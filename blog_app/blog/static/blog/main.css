@@ -45,6 +45,10 @@ a.article-title:hover {
   text-decoration: none;
 }
 
+.btn-danger{
+  margin-bottom: 15px;
+}
+
 .article-content {
   white-space: pre-line;
 }
