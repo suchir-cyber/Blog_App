@@ -99,3 +99,9 @@ def contact(request):
             messages.success(request, f'Your request has been sent successfully!')
             return redirect('blog-contact')
     return render(request,'blog/contact.html',{'form' : form})
+
+def searchbar(request):
+    if request.method == "GET":
+        search = request.GET.get('search')
+        posts = Post.objects.all().filter(content__contains=search)
+        return render(request,'blog/searchbar.html',{"posts" : posts})
