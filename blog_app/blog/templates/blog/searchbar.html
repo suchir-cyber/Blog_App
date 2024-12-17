@@ -1,10 +1,10 @@
 {% extends "blog/base.html" %}
 {% block content %}
 <form action="{% url 'searchbar' %}" method="GET" class="search-form">
-    <div class="container">
+    <div class="container searchBox">
         <div class="row justify-content-center">
           <div class="col-md-6" class="to_padd">
-            <div class="search-container searchBox">
+            <div class="search-container ">
               <input type="text" name="search" class="form-control search-input" placeholder="Search...">
               
             </div>
@@ -12,6 +12,25 @@
         </div>
     </div>
 </form>
+
+<div class="container">
+    <button id="toggleDatePicker" class="btn btn-primary">Select Date Range</button>
+    <div class="date-picker-container" id="datePickerContainer">
+        <form action="{% url 'searchbar' %}" method="GET" class="search-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Apply</button>
+        </form>
+    </div>
+  </div>
    
   {% if posts %}
     {% for post in posts %}
