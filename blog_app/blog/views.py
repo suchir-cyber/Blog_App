@@ -9,6 +9,7 @@ from blog_app.forms import ContactForm
 from django.contrib import messages
 from users.models import Complaint
 from django.utils import timezone
+from django.db.models import Q
 
 # Create your views here.
 
@@ -110,18 +111,31 @@ def contact(request):
     return render(request,'blog/contact.html',{'form' : form,'title' : 'contact'})
 
 
-def searchbar(request):
-    if request.method == "GET":
-        search = request.GET.get('search')
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-        posts = Post.objects.all()
+class SearchView(ListView):
+    model = Post
+    template_name = 'blog/searchbar.html'  # Your template for search results
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+
+        # Get the search query and date range from the request
+        search_query = self.request.GET.get('search', '')
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        # Start with all posts
+
+        queryset = Post.objects.all()
+
+        # Filter by search query if provided
+
+        if search_query:
+            queryset = queryset.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
+
+        # Filter by date range if both dates are provided
         if start_date and end_date:
-            # Convert string dates to datetime objects
             start_date = timezone.datetime.strptime(start_date, '%Y-%m-%d')
             end_date = timezone.datetime.strptime(end_date, '%Y-%m-%d') + timezone.timedelta(days=1)  # Include the end date
-            posts = posts.filter(date_posted__range=(start_date, end_date))
-        else:
-            if search:
-                posts = Post.objects.all().filter(content__contains=search)
-        return render(request,'blog/searchbar.html',{"posts" : posts})
+            queryset = queryset.filter(date_posted__range=(start_date, end_date))
+
+        return queryset.order_by('-date_posted')
