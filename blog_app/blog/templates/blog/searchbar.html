@@ -30,6 +30,11 @@
             <button type="submit" class="btn btn-success mt-3">Apply</button>
         </form>
     </div>
+    {% if request.GET.search or request.GET.start_date or request.GET.end_date %}
+
+       <a href="{% url 'searchbar' %}" class="btn btn-danger mt-3">Clear Filters</a>
+
+    {% endif %}
   </div>
    
   {% if posts %}
@@ -48,25 +53,35 @@
     {% endfor %}
     {% if is_paginated %}
 
-      {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-      {% endif %}
+    <div class="pagination">
 
-      {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% if page_obj.has_previous %}
+
+            <a class="btn btn-outline-info mb-4" href="?page=1&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">First</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">Previous</a>
+
         {% endif %}
-      {% endfor %}
 
-      {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-      {% endif %}
 
-    {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4" href="?page={{ num }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">{{ num }}</a>
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">Last</a>
+        {% endif %}
+
+    </div>
+
+{% endif %}
   {% else %}
     <h2>Nothing Found!!</h2>
   {% endif %}  
